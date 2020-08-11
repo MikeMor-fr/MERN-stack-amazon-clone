@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import {Link} from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
-import {signin} from "../actions/userActions";
+import {register} from "../actions/userActions";
 
-function SigninScreen(props) {
+function ShippingScreen(props) {
 
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const userSignin = useSelector(state => state.userSignin);
-  const { loading, userInfo, error } = userSignin;
+  const [rePassword, setRePassword] = useState('');
+  const userRegister = useSelector(state => state.userRegister);
+  const { loading, userInfo, error } = userRegister;
   const dispatch = useDispatch();
 
   const redirect = props.location.search ? props.location.search.split("=")[1] : "/"
@@ -23,7 +25,7 @@ function SigninScreen(props) {
 
   const submitHandler = (event) => {
     event.preventDefault();
-    dispatch(signin(email, password));
+    dispatch(register(name, email, password));
   }
     
   return (
@@ -33,13 +35,18 @@ function SigninScreen(props) {
         <ul className="form-container">
 
           <li>
-            <h2>Sign In</h2>
+            <h2>Create Account</h2>
           </li>
 
           <li>
             { loading && <div>Loading...</div> }
             { error && <div>{error}</div> }
-          </li>          
+          </li>
+
+          <li>
+            <label htmlFor="name">Name</label>
+            <input type="text" name="name" id="name" onChange={(event) => setName(event.target.value)} />
+          </li>      
 
           <li>
             <label htmlFor="email">Email</label>
@@ -52,12 +59,17 @@ function SigninScreen(props) {
           </li>
 
           <li>
-            <button type="submit" className="button primary">Sign In</button>
+            <label htmlFor="rePassword">Password Again</label>
+            <input type="Password" id="rePassword" name="rePassword" onChange={(event) => setRePassword(event.target.value)} />
           </li>
 
-          <li>New to amazonia ?</li>
           <li>
-            <Link to={redirect === "/" ? "/register" : `/register?redirect=${redirect}`} className="button secondary text-center">Create your amazonia account</Link>
+            <button type="submit" className="button primary">Register</button>
+          </li>
+
+          <li>Already have an account ?</li>
+          <li>
+          <Link to={redirect === "/" ? "/signin" : `/signin?redirect=${redirect}`} className="button secondary text-center">Create your amazonia account</Link>
           </li>
 
         </ul>
@@ -68,4 +80,4 @@ function SigninScreen(props) {
 }
 
 
-export default SigninScreen;
+export default ShippingScreen;

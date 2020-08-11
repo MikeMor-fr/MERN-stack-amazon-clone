@@ -35,7 +35,7 @@ function CartScreen(props) {
             <div>Price</div>
           </li>
           {cartItems.length === 0 ? <div>Cart is Empty</div> : cartItems.map(item => 
-          <li>
+          <li key={item.id}>
 
             <div className="cart-image">
               <img src={item.image} alt="item" />
