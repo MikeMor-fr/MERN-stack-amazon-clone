@@ -1,81 +1,66 @@
 import React, { useEffect, useState } from 'react';
 import {Link} from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
-import {register} from "../actions/userActions";
+import {saveShipping} from "../actions/cartActions";
+import CheckoutSteps from '../components/CheckoutSteps';
 
 function ShippingScreen(props) {
 
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [rePassword, setRePassword] = useState('');
-  const userRegister = useSelector(state => state.userRegister);
-  const { loading, userInfo, error } = userRegister;
+  const [address, setAddress] = useState('');
+  const [city, setCity] = useState('');
+  const [postal, setPostal] = useState('');
+  const [country, setCountry] = useState('');
   const dispatch = useDispatch();
-
-  const redirect = props.location.search ? props.location.search.split("=")[1] : "/"
-
-  useEffect(() => {
-    if (userInfo) {
-      props.history.push(redirect);
-    }
-    return () => {
-    };
-  }, [userInfo]);
 
   const submitHandler = (event) => {
     event.preventDefault();
-    dispatch(register(name, email, password));
+    dispatch(saveShipping({ address, city, postal, country }));
+    props.history.push("/payment")
   }
     
   return (
 
-    <div className="form">
-      <form onSubmit={submitHandler}>
-        <ul className="form-container">
+    <div>
 
-          <li>
-            <h2>Create Account</h2>
-          </li>
+      <CheckoutSteps step1 step2 />
 
-          <li>
-            { loading && <div>Loading...</div> }
-            { error && <div>{error}</div> }
-          </li>
+      <div className="form">
+        <form onSubmit={submitHandler}>
+          <ul className="form-container">
 
-          <li>
-            <label htmlFor="name">Name</label>
-            <input type="text" name="name" id="name" onChange={(event) => setName(event.target.value)} />
-          </li>      
+            <li>
+              <h2>Shipping</h2>
+            </li>
 
-          <li>
-            <label htmlFor="email">Email</label>
-            <input type="email" name="email" id="email" onChange={(event) => setEmail(event.target.value)} />
-          </li>
+            <li>
+              <label htmlFor="address">Address</label>
+              <input type="text" name="address" id="address" onChange={(event) => setAddress(event.target.value)} />
+            </li>
 
-          <li>
-            <label htmlFor="password">Password</label>
-            <input type="password" id="password" name="password" onChange={(event) => setPassword(event.target.value)} />
-          </li>
+            <li>
+              <label htmlFor="city">City</label>
+              <input type="text" name="city" id="city" onChange={(event) => setCity(event.target.value)} />
+            </li>
 
-          <li>
-            <label htmlFor="rePassword">Password Again</label>
-            <input type="Password" id="rePassword" name="rePassword" onChange={(event) => setRePassword(event.target.value)} />
-          </li>
+            <li>
+              <label htmlFor="postal">Postal Code</label>
+              <input type="text" name="postal" id="postal" onChange={(event) => setPostal(event.target.value)} />
+            </li>
 
-          <li>
-            <button type="submit" className="button primary">Register</button>
-          </li>
+            <li>
+              <label htmlFor="country">Country</label>
+              <input type="text" name="country" id="country" onChange={(event) => setCountry(event.target.value)} />
+            </li>
 
-          <li>Already have an account ?</li>
-          <li>
-          <Link to={redirect === "/" ? "/signin" : `/signin?redirect=${redirect}`} className="button secondary text-center">Create your amazonia account</Link>
-          </li>
+            <li>
+              <button type="submit" className="button primary">Continue</button>
+            </li>
 
-        </ul>
-      </form>
+          </ul>
+        </form>
+      </div>
+
     </div>
-
   )
 }
 
